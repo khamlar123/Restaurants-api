@@ -6,8 +6,6 @@ const port = process.env.PORT || 3030;
 const path = require('path');
 const api = require('./controllers');
 
-require('./config/passport');
-
 
 app.use(express.json());
 app.use(cors());

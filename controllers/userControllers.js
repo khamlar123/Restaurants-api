@@ -3,7 +3,6 @@ const { sequelize, DataTypes } = require("../config/database");
 const Users = require('../models/user')(sequelize, DataTypes);
 const router = require("express").Router();
 const sh = require('./sharedFunc');
-const passport = require("passport");
 const Sequelize = require("sequelize");
 const jwt = require("jsonwebtoken");
 const dayjs = require("dayjs");
@@ -48,9 +47,6 @@ const Op = Sequelize.Op;
     });
 
     router.post('/user/login', async (req, res) => {
-
- 
-
         try{
   
             const findUser = await Users.findOne({
