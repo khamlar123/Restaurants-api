@@ -48,7 +48,6 @@ const Op = Sequelize.Op;
 
     router.post('/user/login', async (req, res) => {
         try{
-  
             const findUser = await Users.findOne({
                 where:{
                     [Op.and]:[
@@ -63,12 +62,11 @@ const Op = Sequelize.Op;
             const token  = jwt.sign(findUser.password, process.env.JWT_SECRET, {algorithm: 'HS256'});
             const expiresIn = dayjs().add(7, "days").toDate();
             res.cookie("api-auth", token, { secure: false, httpOnly: true, expires: expiresIn});
-    
             res.status(200).json(
                 {
                     authToken: token,
                     expiresIn,
-                    roles: [],
+                    menu: [],
                 }
             );
 

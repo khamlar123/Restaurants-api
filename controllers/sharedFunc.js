@@ -26,9 +26,14 @@ function uploadImgFunc() {
     return jwt.verify(token, process.env.JWT_SECRET);
   }
 
+  function sigToken(token){
+    jwt.sign(token, process.env.JWT_SECRET, { algorithm: "HS256"});  
+  }
+
   module.exports = {
     uploadImgFunc,
     verifyToken,
-    deleteImgFunc
+    deleteImgFunc,
+    sigToken
   };
   
