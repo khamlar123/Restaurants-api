@@ -14,10 +14,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   invoice.init({
-    tableId: DataTypes.INTEGER,
+    invoiceNo: DataTypes.STRING, 
     userId: DataTypes.INTEGER,
-    status: DataTypes.INTEGER,
-    price: DataTypes.DOUBLE
+    status: DataTypes.INTEGER, // 0 pending 1 cancel 2 complete
+    price: DataTypes.DOUBLE,
+    img: DataTypes.STRING,
+    notes: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'invoice',

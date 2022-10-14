@@ -2,30 +2,21 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('invoices', {
+    await queryInterface.createTable('invoiceTables', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      invoiceNo:{
-        type: Sequelize.STRING
+      tableId: {
+        type: Sequelize.INTEGER
       },
-      userId: {
+      invoiceId: {
         type: Sequelize.INTEGER
       },
       status: {
         type: Sequelize.INTEGER
-      },
-      price: {
-        type: Sequelize.DOUBLE
-      },
-      img:{
-        type: Sequelize.STRING
-      },
-      notes:{
-        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -38,6 +29,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('invoices');
+    await queryInterface.dropTable('invoiceTables');
   }
 };

@@ -50,6 +50,4 @@ router.delete('/user/menu', async (req, res) => {
     }
 });
 
-
-
 module.exports = router;

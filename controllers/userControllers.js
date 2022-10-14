@@ -1,6 +1,8 @@
 "use strict";
 const { sequelize, DataTypes } = require("../config/database");
 const Users = require('../models/user')(sequelize, DataTypes);
+const UserMenu = require('../models/usermenu')(sequelize, DataTypes);
+const Menu = require('../models/menu')(sequelize, DataTypes);
 const router = require("express").Router();
 const sh = require('./sharedFunc');
 const Sequelize = require("sequelize");
@@ -8,12 +10,27 @@ const jwt = require("jsonwebtoken");
 const dayjs = require("dayjs");
 const Op = Sequelize.Op;
 
+    Users.hasMany(UserMenu, {foreignKey: 'userId'});
+    UserMenu.belongsTo(Users, {foreignKey: 'userId'});
+    Menu.hasMany(UserMenu, { foreignKey: "menuId" });
+    UserMenu.belongsTo(Menu, { foreignKey: "menuId" });
+
     router.get('/users', async (req, res) => {
         try{
-   
-            const users = await Users.findAll();
+            const users = await Users.findAll({
+                where: {
+                    [Op.or]:[
+                        {userName:{[Op.like]:"%"+req.query.kw+"%"}},
+                        {firstName:{[Op.like]:"%"+req.query.kw+"%"}},
+                        {lastName:{[Op.like]:"%"+req.query.kw+"%"}},
+
+                    ]
+                },
+                include: [
+                    {model: UserMenu}
+                ],
+            });
             res.status(200).json(users);
-            
         }catch(e){
             res.status(404).json(e);
         }
@@ -21,7 +38,12 @@ const Op = Sequelize.Op;
 
     router.get('/users-id', async (req, res) => {
         try{
-            const user = await Users.findOne({id: req.query.id});
+            const user = await Users.findOne({
+                where:{id: req.query.id},
+                include:[
+                    {model: UserMenu}
+                ]
+            });
             res.status(200).json(user);
         }catch(e){
             res.status(404).json(e);
@@ -57,7 +79,15 @@ const Op = Sequelize.Op;
                 }
             });
     
-            if(!findUser) { res.json('User invalid')}
+            if(!findUser) { 
+                res.json('User invalid');
+                 return;
+             }
+    
+            const menu = await UserMenu.findOne({
+                where:{userId: findUser.id},
+                include:[{model: Menu}]
+            });
             
             const token  = jwt.sign(findUser.password, process.env.JWT_SECRET, {algorithm: 'HS256'});
             const expiresIn = dayjs().add(7, "days").toDate();
@@ -66,10 +96,10 @@ const Op = Sequelize.Op;
                 {
                     authToken: token,
                     expiresIn,
-                    menu: [],
+                    menu: menu,
                 }
             );
-
+          
         }catch(e){
             res.status(404).json(e);
         }

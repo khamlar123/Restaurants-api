@@ -18,7 +18,7 @@ module.exports = {
       icon: {
         type: Sequelize.STRING
       },
-      active:{
+      active: {
         type: Sequelize.INTEGER
       },
       createdAt: {
